@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<html ng-app="WinApp">
+<head>
+    <meta charset="utf-8" />
+    <title>App1</title>
+
+
+    <!-- WinJS references -->
+    <!-- At runtime, ui-themed.css resolves to ui-themed.light.css or ui-themed.dark.css
+    based on the user’s theme setting. This is part of the MRT resource loading functionality. -->
+    <link href="/css/ui-themed.css" rel="stylesheet" />
+    <script src="//Microsoft.Phone.WinJS.2.1/js/base.js"></script>
+    <script src="//Microsoft.Phone.WinJS.2.1/js/ui.js"></script>
+
+    <!-- App1 references -->
+    <link href="/css/default.css" rel="stylesheet" />
+    <!--<link href="/css/bootstrap.css" rel="stylesheet" />-->
+    <script src="/js/winstore-jscompat.js"></script>
+    <script src="/js/jquery-2.1.4.js"></script>
+    
+    <script src="/js/angular.js"></script>
+    <script src="/js/angular-animate.js"></script>
+    <script src="/js/angular-sanitize.js"></script>
+    <script src="/js/default.js"></script>
+    
+</head>
+<body class="phone" ng-controller="OverviewController">
+    <p ng-show="showingOverview">These are your folders:</p>
+    <div class="overview" ng-show="showingOverview" ng-repeat="story in storylist track by $index">
+        <ul class="overviewUl">
+            <li class="overviewLi" ng-click="goToStory(story.id)">
+                {{story.name}}
+            </li>
+        </ul>
+    </div>
+    <textarea ng-show="addingInProgress && showingOverview" type="text" class="form-control1" 
+              placeholder="Please name the new folder" ng-model="newFolderName" ng-enter="addFolder(newFolderName)"></textarea>
+    <button ng-show="showingOverview" class="mainButton" ng-click="addFolder(newFolderName)" >Add folder</button>
+
+    <div ng-show="!showingOverview" ng-controller="AppController">
+        <p>These are your notes:</p>
+        <div ng-repeat="note in notes track by $index">
+            <ul class="tabs">
+                <li>
+                    <div ng-click="editNote(note.text, $index)" ng-class='{coloractive: ($index == currentlySelected)}'>
+                        <span ng-repeat="line in (note.text | newlines) track by $index">
+                            {{line}}<br>
+                        </span>
+                    </div>
+                </li>
+                <li class="ltab" ng-click="deletePost($index)">delete</li>
+            </ul>
+        </div>
+        <div>
+            <textarea id="textinput" type="text" class="form-control" placeholder="Write a new post..." ng-model="newText"></textarea>
+            <span>
+                <button class="button" type="button" ng-click="addPost(newText)">Submit</button>
+                <button class="button" ng-show="lastDeletedPost" ng-click="restorePost(lastDeletedPost)">Redo</button>
+                <button class="button" ng-class="rightside" ng-click="goToMain()">Main menu</button>
+            </span>
+        </div>
+    </div>
+</body>
+</html>
